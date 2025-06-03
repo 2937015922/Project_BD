@@ -1,17 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://kv18n6u4ouw7"]
+[gd_scene load_steps=3 format=3 uid="uid://kv18n6u4ouw7"]
 
 [ext_resource type="Script" uid="uid://skj3kkodkli3" path="res://the_console.gd" id="1_a202f"]
+[ext_resource type="Script" uid="uid://mxs604n0rgn3" path="res://selector.gd" id="2_noarx"]
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_a202f")
 
 [node name="TableGrid" type="Node" parent="."]
 script = ExtResource("1_a202f")
-size = Vector2i(16, 6)
+size = Vector2i(30, 16)
+num_diamonds = 100
 metadata/_custom_type_script = "uid://skj3kkodkli3"
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.0263591, 2.36919, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.0263591, 6.49917, -1.80527e-07)
 projection = 1
 size = 14.565
 
@@ -21,3 +23,7 @@ light_energy = 2.936
 light_indirect_energy = 4.057
 light_angular_distance = 7.45
 light_specular = 0.0
+
+[node name="Selector" type="Node3D" parent="."]
+script = ExtResource("2_noarx")
+metadata/_custom_type_script = "uid://mxs604n0rgn3"
