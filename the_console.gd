@@ -13,7 +13,7 @@ func _enter_tree() -> void:
 	
 	var cam := get_node("/root/Node3D/Camera3D")
 	cam.size = float(size.x)/3  # 控制可视范围
-	cam.transform.origin = Vector3(size.x/4, 1, size.y/4-0.5)
+	cam.transform.origin = Vector3(size.x/4, 1, size.y/4+0.25)
 	
 	
 	for x in size.x:

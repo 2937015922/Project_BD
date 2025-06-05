@@ -4,7 +4,7 @@ var active: bool
 
 func _ready() -> void:	
 	self.name = "Base"
-	self.scale = Vector3(0.33, 0.33, 0.33)
+	self.scale = Vector3(0.495, 0.495, 0.495)
 	if not has_node("CollisionShape3D"):
 		var shape := CollisionShape3D.new()
 		shape.name = "CollisionShape3D"
@@ -19,7 +19,7 @@ func set_background():
 	if (pos.x + pos.y)%2 == 0:
 		mat.albedo_color = Color(0.439, 0.337, 0.125)  # 这里用红色作示例，换成你想要的纯色
 	else:
-		mat.albedo_color = Color(0.812, 0.643, 0.306)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.412, 0.643, 0.306)  # 这里用红色作示例，换成你想要的纯色
 	background.material_override = mat
 	background.scale = Vector3(1, 1, 1)       # 使立方体边长变为 2 个单位
 	background.transform.origin = Vector3(0,-1,0)

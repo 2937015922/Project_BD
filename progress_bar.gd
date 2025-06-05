@@ -15,6 +15,18 @@ func _ready() -> void:
 
 	# 启用每帧更新
 	set_process(true)
+	self.anchor_left   = 1
+	self.anchor_top    = 1
+	self.anchor_right  = 0
+	self.anchor_bottom = 0
+
+	# 3. 设置偏移（Margin）让它距离“右边 10px，顶边 10px”
+	#    注意：在 Godot 4 中，Margin 属性叫 offset_*，旧版 Godot 3 中叫 margin_*
+	#self.offset_right = -40
+	self.offset_top   = 10
+	# 要固定宽高，可以用以下两行（例如宽度 120，高度 30）
+	#self.offset_left   = -10 - 120  # = (-10) - btn_width
+	self.offset_bottom = 10 + 30    # = offset_top + btn_height
 
 func _process(delta: float) -> void:
 	var the_console = get_node("/root/Node3D/TableGrid")
@@ -57,7 +69,6 @@ func _show_overlay() -> void:
 	
 	var final_score = Label.new()
 	final_score.text = str(get_node("/root/Node3D/CanvasLayer/Label").text)
-	get_node("/root/Node3D/CanvasLayer/CenterContainer").add_child(final_score)
 	final_score.z_index = 1024
 	final_score.scale = Vector2(4,4)
 	final_score.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
