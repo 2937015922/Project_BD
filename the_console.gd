@@ -2,15 +2,18 @@ extends Node
 class_name TableGrid
 var rng = RandomNumberGenerator.new()
 
-@export var size: Vector2i = Vector2i(2, 2)  # 使用 Vector2i 表示列数和行数
-@export var num_diamonds: int = 200
+@export var size: Vector2i  # 使用 Vector2i 表示列数和行数
+@export var num_diamonds: int
 var table: Array = []
 var has_not_diamonds: Array = []
+var regret_button
 
 func _enter_tree() -> void:
+
+	
 	var cam := get_node("/root/Node3D/Camera3D")
 	cam.size = float(size.x)/3  # 控制可视范围
-	cam.transform.origin = Vector3(size.x/4, 1, size.y/4)
+	cam.transform.origin = Vector3(size.x/4, 1, size.y/4-0.5)
 	
 	
 	for x in size.x:
@@ -23,6 +26,11 @@ func _enter_tree() -> void:
 	for i in lists_to_put:
 		if i[0] == 2:
 			try_put_diamonds_two(i[1])
+	print(table)
+
+func _on_regret_button_pressed() -> void:
+	print("按钮被按下，执行你的逻辑吧！")
+
 				
 				
 func try_put_diamonds_two(type: int) -> void:
@@ -83,10 +91,11 @@ func put_base(x: int, y: int):
 	add_child(new_base)
 	new_base.global_position = Vector3(x * 0.5, 0, y * 0.5)
 	table[x][y].append(new_base)
+	new_base.set_background()
 	
 func random_choose_by_dir(x: int, y: int, dir: Vector2i):
 	var valid_blocks = []
-	var cur = Vector2i(x,y)
+	var cur = Vector2i(x, y) + dir
 	while inscreen(cur):
 		if not has_diamond(cur.x, cur.y):
 			valid_blocks.append(cur)

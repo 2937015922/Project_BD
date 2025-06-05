@@ -32,7 +32,13 @@ func _ready() -> void:
 		#to_vanish(Vector3(0,0,0),0.15)
 		
 func to_vanish(target_position: Vector3, duration: float) -> void:
+	# 先把自己从 TableGrid.table 中移除，避免后续被再次检测到
+	var table_node = get_node("/root/Node3D/TableGrid")
+	if table_node:
+		table_node.table[pos.x][pos.y].erase(self)
 	var tween := create_tween()
 	tween.tween_property(self, "global_position", target_position, duration)
-	tween.tween_callback(Callable(self, "queue_free"))  # 在移动结束后删除自己
-	get_node("/root/Node3D/TableGrid").table[pos.x][pos.y].erase(self)
+	tween.tween_callback(Callable(self, "queue_free"))
+	var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
+	score_recorder.text = str(int(score_recorder.text) + 1)
+	

@@ -1,15 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://kv18n6u4ouw7"]
+[gd_scene load_steps=5 format=3 uid="uid://kv18n6u4ouw7"]
 
 [ext_resource type="Script" uid="uid://skj3kkodkli3" path="res://the_console.gd" id="1_a202f"]
 [ext_resource type="Script" uid="uid://mxs604n0rgn3" path="res://selector.gd" id="2_noarx"]
+[ext_resource type="Script" uid="uid://fvntjo2o8jp1" path="res://click_button.gd" id="3_a0tk4"]
+[ext_resource type="Script" uid="uid://1t7rrgfsyjel" path="res://progress_bar.gd" id="4_r3fl7"]
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_a202f")
 
 [node name="TableGrid" type="Node" parent="."]
 script = ExtResource("1_a202f")
-size = Vector2i(30, 16)
-num_diamonds = 100
+size = Vector2i(30, 12)
+num_diamonds = 200
 metadata/_custom_type_script = "uid://skj3kkodkli3"
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -27,3 +29,46 @@ light_specular = 0.0
 [node name="Selector" type="Node3D" parent="."]
 script = ExtResource("2_noarx")
 metadata/_custom_type_script = "uid://mxs604n0rgn3"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label2" type="Label" parent="CanvasLayer"]
+offset_left = 23.0
+offset_top = 8.0
+offset_right = 60.0
+offset_bottom = 31.0
+text = "得分:"
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 65.0
+offset_top = 9.0
+offset_right = 105.0
+offset_bottom = 32.0
+text = "0"
+
+[node name="CountdownProgressBar" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 280.0
+offset_top = 9.0
+offset_right = 796.0
+offset_bottom = 36.0
+script = ExtResource("4_r3fl7")
+metadata/_custom_type_script = "uid://1t7rrgfsyjel"
+
+[node name="click_button" type="Button" parent="CanvasLayer/CountdownProgressBar"]
+top_level = true
+z_index = 1024
+layout_mode = 2
+offset_left = 1014.0
+offset_top = 6.0
+offset_right = 1138.0
+offset_bottom = 37.0
+text = "重玩"
+script = ExtResource("3_a0tk4")
+metadata/_custom_type_script = "uid://fvntjo2o8jp1"
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer"]
+z_index = 1024
+offset_left = 553.0
+offset_top = 307.0
+offset_right = 593.0
+offset_bottom = 347.0

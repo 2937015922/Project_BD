@@ -10,18 +10,38 @@ func _ready() -> void:
 		shape.name = "CollisionShape3D"
 		shape.shape = BoxShape3D.new()  # 保证和Sprite重合
 		add_child(shape)
+		
+func set_background():
+	var background = MeshInstance3D.new()
+	background.mesh = BoxMesh.new()
+	add_child(background)
+	var mat := StandardMaterial3D.new()
+	if (pos.x + pos.y)%2 == 0:
+		mat.albedo_color = Color(0.439, 0.337, 0.125)  # 这里用红色作示例，换成你想要的纯色
+	else:
+		mat.albedo_color = Color(0.812, 0.643, 0.306)  # 这里用红色作示例，换成你想要的纯色
+	background.material_override = mat
+	background.scale = Vector3(1, 1, 1)       # 使立方体边长变为 2 个单位
+	background.transform.origin = Vector3(0,-1,0)
+
 
 func _input_event(camera, event, position, normal, shape_idx):
-	active = true
-	for i in get_node("/root/Node3D/TableGrid").table[pos.x][pos.y]:
+	# ① 判断格子里是否已有 Diamond
+	var cell_contents = get_node("/root/Node3D/TableGrid").table[pos.x][pos.y]
+	var active = true
+	for i in cell_contents:
 		if i is Diamond:
 			active = false
+			break
+
+	# ② 只有当 active 且点击左键时才继续
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT and active:
 		print("Base at %s clicked!" % pos)
 		var selector = get_tree().get_root().get_node("/root/Node3D/Selector")
-		var nearby_diamonds = selector.get_surrounding_diamonds(self.pos)
+		var nearby_diamonds = selector.get_surrounding_diamonds(pos)
 		print("Nearby diamonds:", nearby_diamonds)
 
+		# ③ 统计类型出现次数
 		var type_occur = {}
 		for d in nearby_diamonds:
 			if d.type in type_occur:
@@ -29,16 +49,16 @@ func _input_event(camera, event, position, normal, shape_idx):
 			else:
 				type_occur[d.type] = 1
 
-		# 筛选出重复类型（出现次数 > 1）
-		var duplicated_types := []
+		# ④ 筛选出出现次数 > 1 的类型
+		var duplicated_types = []
 		for t in type_occur.keys():
 			if type_occur[t] > 1:
 				duplicated_types.append(t)
 
-		# 删除重复类型的钻石
+		# ⑤ 对这些需要销毁的 Diamond，调用 to_vanish 并传入 Base 的全局位置
 		for d in nearby_diamonds:
 			if d.type in duplicated_types:
-				d.to_vanish(self.position, 0.1)
+				d.to_vanish(self.global_position, 0.1)
 				
 					
 					
