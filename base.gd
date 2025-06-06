@@ -17,9 +17,9 @@ func set_background():
 	add_child(background)
 	var mat := StandardMaterial3D.new()
 	if (pos.x + pos.y)%2 == 0:
-		mat.albedo_color = Color(0.439, 0.337, 0.125)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.0588, 0.0431, 0.0431)  # 这里用红色作示例，换成你想要的纯色
 	else:
-		mat.albedo_color = Color(0.412, 0.643, 0.306)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.3, 0.2, 0.2)  # 这里用红色作示例，换成你想要的纯色
 	background.material_override = mat
 	background.scale = Vector3(1, 1, 1)       # 使立方体边长变为 2 个单位
 	background.transform.origin = Vector3(0,-1,0)
@@ -54,11 +54,17 @@ func _input_event(camera, event, position, normal, shape_idx):
 		for t in type_occur.keys():
 			if type_occur[t] > 1:
 				duplicated_types.append(t)
+		if duplicated_types == []:
+			var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
+			score_recorder.text = str(int(score_recorder.text) - 1)
 
 		# ⑤ 对这些需要销毁的 Diamond，调用 to_vanish 并传入 Base 的全局位置
+		var regret_group = []
 		for d in nearby_diamonds:
 			if d.type in duplicated_types:
 				d.to_vanish(self.global_position, 0.1)
-				
+				regret_group.append([d.pos, d.type])
+		get_parent().regret_lists.append(regret_group)
+		print(get_parent().regret_lists)
 					
 					

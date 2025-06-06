@@ -6,7 +6,8 @@ var rng = RandomNumberGenerator.new()
 @export var num_diamonds: int
 var table: Array = []
 var has_not_diamonds: Array = []
-var regret_button
+var regret_lists = []
+
 
 func _enter_tree() -> void:
 
@@ -28,8 +29,14 @@ func _enter_tree() -> void:
 			try_put_diamonds_two(i[1])
 	print(table)
 
-func _on_regret_button_pressed() -> void:
-	print("按钮被按下，执行你的逻辑吧！")
+func on_regret_button_pressed() -> void:
+	if regret_lists.size() == 0:
+		return
+	for i in regret_lists.back():
+		put_diamond(i[0].x, i[0].y, i[1])
+		var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
+		score_recorder.text = str(int(score_recorder.text) - 1)
+		print(233)
 
 				
 				

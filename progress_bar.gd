@@ -2,7 +2,7 @@ extends ProgressBar
 class_name TwoMinuteCountdownBar
 
 # 总时长 120 秒（2 分钟）
-@export var duration: float = 120
+@export var duration: float = 2
 
 var _elapsed: float = 0.0
 var _finished: bool = false
@@ -68,10 +68,13 @@ func _show_overlay() -> void:
 	freeze_node_tree(get_node("/root/Node3D/TableGrid"))
 	
 	var final_score = Label.new()
-	final_score.text = str(get_node("/root/Node3D/CanvasLayer/Label").text)
+	final_score.text = "得分：" + str(get_node("/root/Node3D/CanvasLayer/Label").text)
 	final_score.z_index = 1024
 	final_score.scale = Vector2(4,4)
 	final_score.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	final_score.add_theme_font_size_override("font_size", 55)
+	final_score.set_position(get_viewport().size * 0.5 - Vector2(400,200))
+	add_child(final_score)
 	
 func _no_diamonds_left(table_grid) -> bool:
 	# table_grid.table 是一个二维数组：table[x][y] = [ ... 节点 ... ]

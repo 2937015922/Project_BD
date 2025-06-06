@@ -1,0 +1,1 @@
+class_name label_control extends Label

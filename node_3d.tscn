@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://kv18n6u4ouw7"]
+[gd_scene load_steps=6 format=3 uid="uid://kv18n6u4ouw7"]
 
 [ext_resource type="Script" uid="uid://skj3kkodkli3" path="res://the_console.gd" id="1_a202f"]
 [ext_resource type="Script" uid="uid://mxs604n0rgn3" path="res://selector.gd" id="2_noarx"]
 [ext_resource type="Script" uid="uid://fvntjo2o8jp1" path="res://click_button.gd" id="3_a0tk4"]
 [ext_resource type="Script" uid="uid://1t7rrgfsyjel" path="res://progress_bar.gd" id="4_r3fl7"]
+[ext_resource type="Script" uid="uid://dxnoj25ec870x" path="res://ui_anchor.gd" id="5_jka67"]
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_a202f")
@@ -33,17 +34,19 @@ metadata/_custom_type_script = "uid://mxs604n0rgn3"
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Label2" type="Label" parent="CanvasLayer"]
-offset_left = 34.0
-offset_top = 45.0
-offset_right = 71.0
-offset_bottom = 68.0
+offset_left = 233.0
+offset_top = 28.0
+offset_right = 333.0
+offset_bottom = 89.0
+theme_override_font_sizes/font_size = 44
 text = "得分:"
 
 [node name="Label" type="Label" parent="CanvasLayer"]
-offset_left = 78.0
-offset_top = 48.0
-offset_right = 118.0
-offset_bottom = 71.0
+offset_left = 341.0
+offset_top = 31.0
+offset_right = 405.0
+offset_bottom = 92.0
+theme_override_font_sizes/font_size = 44
 text = "0"
 
 [node name="CountdownProgressBar" type="ProgressBar" parent="CanvasLayer"]
@@ -54,13 +57,62 @@ offset_bottom = 75.0
 script = ExtResource("4_r3fl7")
 metadata/_custom_type_script = "uid://1t7rrgfsyjel"
 
-[node name="click_button" type="Button" parent="CanvasLayer/CountdownProgressBar"]
+[node name="ui_anchor" type="Control" parent="CanvasLayer/CountdownProgressBar"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_jka67")
+lock_left_top_x = 1.0
+lock_right_down_x = 1.0
+left_top_x = 100
+right_down_x = 1000
+right_down_y = 300
+metadata/_custom_type_script = "uid://dxnoj25ec870x"
+
+[node name="click_button" type="Button" parent="CanvasLayer"]
+offset_left = 825.0
+offset_top = 17.0
+offset_right = 960.0
+offset_bottom = 78.0
+text = "悔棋"
+script = ExtResource("3_a0tk4")
+type = 2
+metadata/_custom_type_script = "uid://fvntjo2o8jp1"
+
+[node name="ui_anchor" type="Control" parent="CanvasLayer/click_button"]
+anchors_preset = 0
+offset_left = 173.0
+offset_top = -1.0
+offset_right = 213.0
+offset_bottom = 39.0
+script = ExtResource("5_jka67")
+lock_left_top_x = 1.0
+lock_right_down_x = 1.0
+left_top_x = -750
+right_down_x = -450
+right_down_y = 100
+metadata/_custom_type_script = "uid://dxnoj25ec870x"
+
+[node name="click_button2" type="Button" parent="CanvasLayer"]
 top_level = true
 z_index = 1024
-offset_left = 805.0
-offset_top = 5.0
-offset_right = 1086.0
-offset_bottom = 128.0
+offset_left = 998.0
+offset_top = 16.0
+offset_right = 1140.0
+offset_bottom = 77.0
 text = "重玩"
 script = ExtResource("3_a0tk4")
+type = 1
 metadata/_custom_type_script = "uid://fvntjo2o8jp1"
+
+[node name="ui_anchor" type="Control" parent="CanvasLayer/click_button2"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_jka67")
+lock_left_top_x = 1.0
+lock_right_down_x = 1.0
+left_top_x = -450
+right_down_x = -50
+right_down_y = 100
+metadata/_custom_type_script = "uid://dxnoj25ec870x"
