@@ -2,7 +2,7 @@ extends ProgressBar
 class_name TwoMinuteCountdownBar
 
 # 总时长 120 秒（2 分钟）
-@export var duration: float = 2
+@export var duration: float = 120
 
 var _elapsed: float = 0.0
 var _finished: bool = false

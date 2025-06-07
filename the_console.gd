@@ -7,7 +7,7 @@ var rng = RandomNumberGenerator.new()
 var table: Array = []
 var has_not_diamonds: Array = []
 var regret_lists = []
-
+var last_click_base: Object
 
 func _enter_tree() -> void:
 
@@ -28,6 +28,10 @@ func _enter_tree() -> void:
 		if i[0] == 2:
 			try_put_diamonds_two(i[1])
 	print(table)
+
+func recover_mark_grey_click_point():
+	if last_click_base is Base:
+		last_click_base.set_color()
 
 func on_regret_button_pressed() -> void:
 	if regret_lists.size() == 0:

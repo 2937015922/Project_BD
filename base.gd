@@ -1,6 +1,8 @@
 class_name Base extends Area3D
 var pos: Vector2i = Vector2i(0, 0)
 var active: bool
+var background: Object
+var mat: Object
 
 func _ready() -> void:	
 	self.name = "Base"
@@ -12,18 +14,26 @@ func _ready() -> void:
 		add_child(shape)
 		
 func set_background():
-	var background = MeshInstance3D.new()
+	background = MeshInstance3D.new()
 	background.mesh = BoxMesh.new()
 	add_child(background)
-	var mat := StandardMaterial3D.new()
+	mat = StandardMaterial3D.new()
 	if (pos.x + pos.y)%2 == 0:
 		mat.albedo_color = Color(0.0588, 0.0431, 0.0431)  # 这里用红色作示例，换成你想要的纯色
 	else:
-		mat.albedo_color = Color(0.3, 0.2, 0.2)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.225, 0.15, 0.15)  # 这里用红色作示例，换成你想要的纯色
 	background.material_override = mat
 	background.scale = Vector3(1, 1, 1)       # 使立方体边长变为 2 个单位
-	background.transform.origin = Vector3(0,-1,0)
+	background.transform.origin = Vector3(0,-3,0)
 
+func set_color():
+	if (pos.x + pos.y)%2 == 0:
+		mat.albedo_color = Color(0.0588, 0.0431, 0.0431)  # 这里用红色作示例，换成你想要的纯色
+	else:
+		mat.albedo_color = Color(0.225, 0.15, 0.15)  # 这里用红色作示例，换成你想要的纯色
+
+func mark_base():
+	mat.albedo_color = Color(0.2, 0.2, 0.2)
 
 func _input_event(camera, event, position, normal, shape_idx):
 	# ① 判断格子里是否已有 Diamond
@@ -36,6 +46,10 @@ func _input_event(camera, event, position, normal, shape_idx):
 
 	# ② 只有当 active 且点击左键时才继续
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT and active:
+		get_node(("/root/Node3D/TableGrid")).recover_mark_grey_click_point()
+		get_node(("/root/Node3D/TableGrid")).last_click_base = self
+		mark_base()
+		
 		print("Base at %s clicked!" % pos)
 		var selector = get_tree().get_root().get_node("/root/Node3D/Selector")
 		var nearby_diamonds = selector.get_surrounding_diamonds(pos)
