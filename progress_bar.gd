@@ -45,6 +45,7 @@ func _process(delta: float) -> void:
 		_show_overlay()
 	if _no_diamonds_left(the_console):
 		_show_overlay()
+		_finished = true
 
 
 func _show_overlay() -> void:
@@ -68,7 +69,7 @@ func _show_overlay() -> void:
 	freeze_node_tree(get_node("/root/Node3D/TableGrid"))
 	
 	var final_score = Label.new()
-	final_score.text = "得分：" + str(get_node("/root/Node3D/CanvasLayer/Label").text)
+	final_score.text = "得分：" + str(int(get_node("/root/Node3D/CanvasLayer/Label").text) + int(duration - _elapsed))
 	final_score.z_index = 1024
 	final_score.scale = Vector2(4,4)
 	final_score.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
