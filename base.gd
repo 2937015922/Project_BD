@@ -19,18 +19,18 @@ func set_background():
 	add_child(background)
 	mat = StandardMaterial3D.new()
 	if (pos.x + pos.y)%2 == 0:
-		mat.albedo_color = Color(0.0588, 0.0431, 0.0431)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.0388, 0.0284, 0.0284)  # 这里用红色作示例，换成你想要的纯色
 	else:
-		mat.albedo_color = Color(0.225, 0.15, 0.15)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.1485, 0.099, 0.099)  # 这里用红色作示例，换成你想要的纯色
 	background.material_override = mat
 	background.scale = Vector3(1, 1, 1)       # 使立方体边长变为 2 个单位
 	background.transform.origin = Vector3(0,-3,0)
 
 func set_color():
 	if (pos.x + pos.y)%2 == 0:
-		mat.albedo_color = Color(0.0588, 0.0431, 0.0431)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.0388, 0.0284, 0.0284)  # 这里用红色作示例，换成你想要的纯色
 	else:
-		mat.albedo_color = Color(0.225, 0.15, 0.15)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.1485, 0.099, 0.099)  # 这里用红色作示例，换成你想要的纯色
 
 func mark_base():
 	mat.albedo_color = Color(0.2, 0.2, 0.2)
@@ -46,6 +46,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 
 	# ② 只有当 active 且点击左键时才继续
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT and active:
+		
 		get_node(("/root/Node3D/TableGrid")).recover_mark_grey_click_point()
 		get_node(("/root/Node3D/TableGrid")).last_click_base = self
 		mark_base()
@@ -79,6 +80,8 @@ func _input_event(camera, event, position, normal, shape_idx):
 				d.to_vanish(self.global_position, 0.1)
 				regret_group.append([d.pos, d.type])
 		get_parent().regret_lists.append(regret_group)
+		get_node("/root/Node3D/TableGrid").update_odds_notice()
 		print(get_parent().regret_lists)
+		
 					
 					

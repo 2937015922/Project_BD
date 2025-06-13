@@ -7,14 +7,16 @@ var rng = RandomNumberGenerator.new()
 var table: Array = []
 var has_not_diamonds: Array = []
 var regret_lists = []
+var odd_diamonds = {}
 var last_click_base: Object
+var all_diamonds: Array
 
 func _enter_tree() -> void:
 
 	
 	var cam := get_node("/root/Node3D/Camera3D")
 	cam.size = float(size.x)/3  # 控制可视范围
-	cam.transform.origin = Vector3(size.x/4, 1, size.y/4+0.25)
+	cam.transform.origin = Vector3(size.x/4, 6, size.y/4+0.25)
 	
 	
 	for x in size.x:
@@ -28,6 +30,9 @@ func _enter_tree() -> void:
 		if i[0] == 2:
 			try_put_diamonds_two(i[1])
 	print(table)
+	
+func _process(delta: float) -> void:
+	all_diamonds = count_all_diamonds()
 
 func recover_mark_grey_click_point():
 	if last_click_base is Base:
@@ -41,7 +46,16 @@ func on_regret_button_pressed() -> void:
 		var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
 		score_recorder.text = str(int(score_recorder.text) - 1)
 		print(233)
+		update_odds_notice()
 
+func count_all_diamonds() -> Array:
+	var result = []
+	for column in table:
+		for cell_contents in column:
+			for obj in cell_contents:
+				if obj is Diamond:
+					result.append(obj)
+	return result
 				
 				
 func try_put_diamonds_two(type: int) -> void:
@@ -85,7 +99,43 @@ func try_put_diamonds_two(type: int) -> void:
 	has_not_diamonds.erase([pos0.x, pos0.y])
 	has_not_diamonds.erase([pos1.x, pos1.y])
 		
-
+func update_odds_notice():
+	check_odd_diamonds()
+	print(odd_diamonds)
+	for i in range(1, 10):
+		var node_name := str(i)
+		# 先用 has() 或 get(key, default) 避免不存在时报错
+		if not has_node(node_name):
+			print(233)
+			if odd_diamonds.get(i):
+				var hint := Sprite3D.new()
+				var texture_path := "res://diamonds/%d.png" % i
+				var texture = load(texture_path)
+				hint.name = node_name
+				hint.texture = texture
+				hint.rotation_degrees = Vector3(-90, 0, 0)
+				add_child(hint)
+				hint.global_position = Vector3(4 + i*0.5,2,-0.5)
+				print(i)
+		elif has_node(node_name):
+			if not odd_diamonds.get(i):
+				get_node(node_name).queue_free()
+				print(234)
+			
+func check_odd_diamonds():
+	all_diamonds = count_all_diamonds()
+	var type_to_nums = {}
+	for i in all_diamonds:
+		if i.type not in type_to_nums:
+			type_to_nums[i.type] = 1
+		else :
+			type_to_nums[i.type] += 1
+	for i in type_to_nums:
+		if type_to_nums[i]%2 == 1:
+			odd_diamonds[i] = true
+		else:
+			odd_diamonds[i] = false
+		
 	
 		
 func put_diamond(x: int, y: int, type: int):
@@ -127,8 +177,6 @@ func has_diamond(x: int, y: int):
 		if i is Diamond:
 			return true
 	return false
-
-
 
 func random_split_array_two(n: int):
 	var result = []

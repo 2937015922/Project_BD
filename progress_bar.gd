@@ -43,7 +43,7 @@ func _process(delta: float) -> void:
 		value = 0
 		_finished = true
 		_show_overlay()
-	if _no_diamonds_left(the_console):
+	if the_console.all_diamonds.size() == 0:
 		_show_overlay()
 		_finished = true
 
@@ -76,15 +76,6 @@ func _show_overlay() -> void:
 	final_score.add_theme_font_size_override("font_size", 55)
 	final_score.set_position(get_viewport().size * 0.5 - Vector2(400,200))
 	add_child(final_score)
-	
-func _no_diamonds_left(table_grid) -> bool:
-	# table_grid.table 是一个二维数组：table[x][y] = [ ... 节点 ... ]
-	for column in table_grid.table:
-		for cell_contents in column:
-			for obj in cell_contents:
-				if obj is Diamond:
-					return false
-	return true
 	
 func freeze_node_tree(node: Node) -> void:
 	# 停止自身处理函数

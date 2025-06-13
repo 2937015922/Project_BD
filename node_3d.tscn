@@ -16,7 +16,7 @@ num_diamonds = 200
 metadata/_custom_type_script = "uid://skj3kkodkli3"
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.0263591, 6.49917, -1.80527e-07)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.0263591, 12.5623, -4.45553e-07)
 projection = 1
 size = 14.565
 
@@ -35,17 +35,17 @@ metadata/_custom_type_script = "uid://mxs604n0rgn3"
 
 [node name="Label2" type="Label" parent="CanvasLayer"]
 offset_left = 233.0
-offset_top = 28.0
+offset_top = 34.0
 offset_right = 333.0
-offset_bottom = 89.0
+offset_bottom = 95.0
 theme_override_font_sizes/font_size = 44
 text = "得分:"
 
 [node name="Label" type="Label" parent="CanvasLayer"]
 offset_left = 341.0
-offset_top = 31.0
+offset_top = 37.0
 offset_right = 405.0
-offset_bottom = 92.0
+offset_bottom = 98.0
 theme_override_font_sizes/font_size = 44
 text = "0"
 
@@ -53,7 +53,7 @@ text = "0"
 offset_left = 152.0
 offset_top = 22.0
 offset_right = 791.0
-offset_bottom = 75.0
+offset_bottom = 116.0
 script = ExtResource("4_r3fl7")
 metadata/_custom_type_script = "uid://1t7rrgfsyjel"
 
