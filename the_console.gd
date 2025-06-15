@@ -10,10 +10,10 @@ var regret_lists = []
 var odd_diamonds = {}
 var last_click_base: Object
 var all_diamonds: Array
-
+var alarm: Object
 func _enter_tree() -> void:
 
-	
+	alarm = get_node("/root/Node3D/TableGrid/AudioStreamPlayer")
 	var cam := get_node("/root/Node3D/Camera3D")
 	cam.size = float(size.x)/3  # 控制可视范围
 	cam.transform.origin = Vector3(size.x/4, 6, size.y/4+0.25)
@@ -33,6 +33,23 @@ func _enter_tree() -> void:
 	
 func _process(delta: float) -> void:
 	all_diamonds = count_all_diamonds()
+
+func odd_alarm():
+	var should_play = false
+	for i in odd_diamonds:
+		if odd_diamonds.get(i):
+			should_play = true
+	alarm_play(should_play)
+
+func alarm_play(checker: bool):
+	if checker:
+		# 如果要循环播放，确保它在播放中
+		if not alarm.playing:
+			alarm.play()
+	else:
+		# 如果不需要，直接停止（静音且重置进度）
+		if alarm.playing:
+			alarm.stop()
 
 func recover_mark_grey_click_point():
 	if last_click_base is Base:
@@ -135,6 +152,7 @@ func check_odd_diamonds():
 			odd_diamonds[i] = true
 		else:
 			odd_diamonds[i] = false
+	odd_alarm()
 		
 	
 		

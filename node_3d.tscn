@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://kv18n6u4ouw7"]
+[gd_scene load_steps=7 format=3 uid="uid://kv18n6u4ouw7"]
 
 [ext_resource type="Script" uid="uid://skj3kkodkli3" path="res://the_console.gd" id="1_a202f"]
+[ext_resource type="AudioStream" uid="uid://cownutdi1jcpd" path="res://audio/alarm.mp3" id="2_i5arm"]
 [ext_resource type="Script" uid="uid://mxs604n0rgn3" path="res://selector.gd" id="2_noarx"]
 [ext_resource type="Script" uid="uid://fvntjo2o8jp1" path="res://click_button.gd" id="3_a0tk4"]
 [ext_resource type="Script" uid="uid://1t7rrgfsyjel" path="res://progress_bar.gd" id="4_r3fl7"]
@@ -14,6 +15,11 @@ script = ExtResource("1_a202f")
 size = Vector2i(25, 15)
 num_diamonds = 200
 metadata/_custom_type_script = "uid://skj3kkodkli3"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="TableGrid"]
+stream = ExtResource("2_i5arm")
+mix_target = 2
+parameters/looping = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.0263591, 12.5623, -4.45553e-07)
