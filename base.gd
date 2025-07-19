@@ -19,18 +19,18 @@ func set_background():
 	add_child(background)
 	mat = StandardMaterial3D.new()
 	if (pos.x + pos.y)%2 == 0:
-		mat.albedo_color = Color(0.0388, 0.0284, 0.0284)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.0194, 0.0142, 0.0142)  # 这里用红色作示例，换成你想要的纯色
 	else:
-		mat.albedo_color = Color(0.1485, 0.099, 0.099)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.074, 0.050, 0.050)  # 这里用红色作示例，换成你想要的纯色
 	background.material_override = mat
 	background.scale = Vector3(1, 1, 1)       # 使立方体边长变为 2 个单位
 	background.transform.origin = Vector3(0,-3,0)
 
 func set_color():
 	if (pos.x + pos.y)%2 == 0:
-		mat.albedo_color = Color(0.0388, 0.0284, 0.0284)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.0194, 0.0142, 0.0142)  # 这里用红色作示例，换成你想要的纯色
 	else:
-		mat.albedo_color = Color(0.1485, 0.099, 0.099)  # 这里用红色作示例，换成你想要的纯色
+		mat.albedo_color = Color(0.074, 0.050, 0.050)  # 这里用红色作示例，换成你想要的纯色
 
 func mark_base():
 	mat.albedo_color = Color(0.2, 0.2, 0.2)
@@ -83,5 +83,12 @@ func _input_event(camera, event, position, normal, shape_idx):
 		get_node("/root/Node3D/TableGrid").update_odds_notice()
 		print(get_parent().regret_lists)
 		
+		if len(regret_group) == 3:
+			add_score(2)
+		
+func add_score(num: int):
+	for i in range(num):
+		var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
+		score_recorder.text = str(int(score_recorder.text) + 1)
 					
 					

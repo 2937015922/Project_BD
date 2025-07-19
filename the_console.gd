@@ -58,12 +58,15 @@ func recover_mark_grey_click_point():
 func on_regret_button_pressed() -> void:
 	if regret_lists.size() == 0:
 		return
+	var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
 	for i in regret_lists.back():
 		put_diamond(i[0].x, i[0].y, i[1])
-		var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
 		score_recorder.text = str(int(score_recorder.text) - 1)
-		print(233)
 		update_odds_notice()
+	if len(regret_lists.back()) == 3:
+		score_recorder.text = str(int(score_recorder.text) - 2)
+	regret_lists.erase(regret_lists.back())
+	print(regret_lists)
 
 func count_all_diamonds() -> Array:
 	var result = []
@@ -118,12 +121,10 @@ func try_put_diamonds_two(type: int) -> void:
 		
 func update_odds_notice():
 	check_odd_diamonds()
-	print(odd_diamonds)
 	for i in range(1, 10):
 		var node_name := str(i)
 		# 先用 has() 或 get(key, default) 避免不存在时报错
 		if not has_node(node_name):
-			print(233)
 			if odd_diamonds.get(i):
 				var hint := Sprite3D.new()
 				var texture_path := "res://diamonds/%d.png" % i
@@ -133,11 +134,9 @@ func update_odds_notice():
 				hint.rotation_degrees = Vector3(-90, 0, 0)
 				add_child(hint)
 				hint.global_position = Vector3(4 + i*0.5,2,-0.5)
-				print(i)
 		elif has_node(node_name):
 			if not odd_diamonds.get(i):
 				get_node(node_name).queue_free()
-				print(234)
 			
 func check_odd_diamonds():
 	all_diamonds = count_all_diamonds()
