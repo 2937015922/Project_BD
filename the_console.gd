@@ -13,8 +13,8 @@ var rng = RandomNumberGenerator.new()
 ## had to shrink for width).
 const DESIGN_W: float = 1920.0
 const DESIGN_H: float = 1080.0
-const TOP_PAD_PX: float = 160.0
-const BOTTOM_PAD_PX: float = 0.0
+const TOP_PAD_PX: float = 100.0
+const BOTTOM_PAD_PX: float = 25.0
 
 var table: Array = []
 var has_not_diamonds: Array = []
@@ -83,7 +83,14 @@ func _refit() -> void:
 	# itself is never scaled; only the camera zoom changes.
 	cam.size = win_h / px_per_unit
 	var top_pad_world: float = top_pad_px / px_per_unit
-	cam.transform.origin = Vector3(board_w * 0.5, 6.0, cam.size * 0.5 - top_pad_world)
+	var bottom_pad_world: float = bottom_pad_px / px_per_unit
+	# When one axis has leftover slack (e.g. board is width-bound so it
+	# doesn't use the full height), center the board in that slack instead
+	# of pinning it right under the top pad and dumping all the extra space
+	# at the bottom. Any slack cancels out of this center-point formula, so
+	# it still gives the exact same placement as before when there's no
+	# slack (height exactly binding).
+	cam.transform.origin = Vector3(board_w * 0.5, 6.0, (board_h + bottom_pad_world - top_pad_world) * 0.5)
 
 func _process(delta: float) -> void:
 	all_diamonds = count_all_diamonds()
