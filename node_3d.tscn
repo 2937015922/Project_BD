@@ -1,16 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://kv18n6u4ouw7"]
+[gd_scene load_steps=8 format=3 uid="uid://kv18n6u4ouw7"]
 
 [ext_resource type="Script" uid="uid://skj3kkodkli3" path="res://the_console.gd" id="1_a202f"]
 [ext_resource type="AudioStream" uid="uid://cownutdi1jcpd" path="res://audio/alarm.mp3" id="2_i5arm"]
 [ext_resource type="Script" uid="uid://mxs604n0rgn3" path="res://selector.gd" id="2_noarx"]
 [ext_resource type="Script" uid="uid://fvntjo2o8jp1" path="res://click_button.gd" id="3_a0tk4"]
 [ext_resource type="Script" uid="uid://1t7rrgfsyjel" path="res://progress_bar.gd" id="4_r3fl7"]
-[ext_resource type="Script" uid="uid://dxnoj25ec870x" path="res://ui_anchor.gd" id="5_jka67"]
+[ext_resource type="Script" uid="uid://b28vx34p4a1qv" path="res://responsive_canvas.gd" id="6_responsive"]
 
 [node name="Node3D" type="Node3D"]
-script = ExtResource("1_a202f")
 
-[node name="TableGrid" type="Node" parent="."]
+[node name="TableGrid" type="Node3D" parent="."]
 script = ExtResource("1_a202f")
 size = Vector2i(25, 15)
 num_diamonds = 200
@@ -38,89 +37,72 @@ script = ExtResource("2_noarx")
 metadata/_custom_type_script = "uid://mxs604n0rgn3"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("6_responsive")
 
-[node name="Label2" type="Label" parent="CanvasLayer"]
-offset_left = 233.0
-offset_top = 34.0
-offset_right = 333.0
-offset_bottom = 95.0
+[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 20.0
+offset_top = 10.0
+offset_right = 100.0
+offset_bottom = 50.0
 theme_override_font_sizes/font_size = 44
 text = "得分:"
 
-[node name="Label" type="Label" parent="CanvasLayer"]
-offset_left = 341.0
-offset_top = 37.0
-offset_right = 405.0
-offset_bottom = 98.0
+[node name="ScoreValue" type="Label" parent="CanvasLayer"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 110.0
+offset_top = 10.0
+offset_right = 180.0
+offset_bottom = 50.0
 theme_override_font_sizes/font_size = 44
 text = "0"
 
 [node name="CountdownProgressBar" type="ProgressBar" parent="CanvasLayer"]
-offset_left = 152.0
-offset_top = 22.0
-offset_right = 791.0
-offset_bottom = 116.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = 200.0
+offset_top = 10.0
+offset_right = -360.0
+offset_bottom = 60.0
 script = ExtResource("4_r3fl7")
 metadata/_custom_type_script = "uid://1t7rrgfsyjel"
 
-[node name="ui_anchor" type="Control" parent="CanvasLayer/CountdownProgressBar"]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("5_jka67")
-lock_left_top_x = 1.0
-lock_right_down_x = 1.0
-left_top_x = 100
-right_down_x = 1000
-right_down_y = 300
-metadata/_custom_type_script = "uid://dxnoj25ec870x"
-
-[node name="click_button" type="Button" parent="CanvasLayer"]
-offset_left = 825.0
-offset_top = 17.0
-offset_right = 960.0
-offset_bottom = 78.0
+[node name="UndoButton" type="Button" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -330.0
+offset_top = 10.0
+offset_right = -185.0
+offset_bottom = 60.0
 theme_override_font_sizes/font_size = 44
 text = "悔棋"
 script = ExtResource("3_a0tk4")
 type = 2
 metadata/_custom_type_script = "uid://fvntjo2o8jp1"
 
-[node name="ui_anchor" type="Control" parent="CanvasLayer/click_button"]
-anchors_preset = 0
-offset_left = 173.0
-offset_top = -1.0
-offset_right = 213.0
-offset_bottom = 39.0
-script = ExtResource("5_jka67")
-lock_left_top_x = 1.0
-lock_right_down_x = 1.0
-left_top_x = -750
-right_down_x = -450
-right_down_y = 100
-metadata/_custom_type_script = "uid://dxnoj25ec870x"
-
-[node name="click_button2" type="Button" parent="CanvasLayer"]
+[node name="RestartButton" type="Button" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -165.0
+offset_top = 10.0
+offset_right = -15.0
+offset_bottom = 60.0
 top_level = true
 z_index = 1024
-offset_left = 998.0
-offset_top = 16.0
-offset_right = 1140.0
-offset_bottom = 77.0
 theme_override_font_sizes/font_size = 44
 text = "重玩"
 script = ExtResource("3_a0tk4")
 type = 1
 metadata/_custom_type_script = "uid://fvntjo2o8jp1"
-
-[node name="ui_anchor" type="Control" parent="CanvasLayer/click_button2"]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("5_jka67")
-lock_left_top_x = 1.0
-lock_right_down_x = 1.0
-left_top_x = -450
-right_down_x = -50
-right_down_y = 100
-metadata/_custom_type_script = "uid://dxnoj25ec870x"

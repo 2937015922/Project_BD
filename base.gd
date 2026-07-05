@@ -70,7 +70,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 			if type_occur[t] > 1:
 				duplicated_types.append(t)
 		if duplicated_types == []:
-			var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
+			var score_recorder = get_node("/root/Node3D/CanvasLayer/ScoreValue")
 			score_recorder.text = str(int(score_recorder.text) - 1)
 
 		# ⑤ 对这些需要销毁的 Diamond，调用 to_vanish 并传入 Base 的全局位置
@@ -88,7 +88,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 		
 func add_score(num: int):
 	for i in range(num):
-		var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
+		var score_recorder = get_node("/root/Node3D/CanvasLayer/ScoreValue")
 		score_recorder.text = str(int(score_recorder.text) + 1)
 					
 					

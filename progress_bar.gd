@@ -15,18 +15,6 @@ func _ready() -> void:
 
 	# 启用每帧更新
 	set_process(true)
-	self.anchor_left   = 1
-	self.anchor_top    = 1
-	self.anchor_right  = 0
-	self.anchor_bottom = 0
-
-	# 3. 设置偏移（Margin）让它距离“右边 10px，顶边 10px”
-	#    注意：在 Godot 4 中，Margin 属性叫 offset_*，旧版 Godot 3 中叫 margin_*
-	#self.offset_right = -40
-	self.offset_top   = 10
-	# 要固定宽高，可以用以下两行（例如宽度 120，高度 30）
-	#self.offset_left   = -10 - 120  # = (-10) - btn_width
-	self.offset_bottom = 10 + 30    # = offset_top + btn_height
 
 func _process(delta: float) -> void:
 	var the_console = get_node("/root/Node3D/TableGrid")
@@ -49,7 +37,7 @@ func _process(delta: float) -> void:
 
 
 func _show_overlay() -> void:
-	# 1. 找到场景中已经存在的 CanvasLayer（假设它的名字就是 "CanvasLayer"）
+	# 1. 找到场景中已经存在的 CanvasLayer
 	var ui_layer = get_node("/root/Node3D/CanvasLayer") as CanvasLayer
 	if not ui_layer:
 		push_warning("找不到名称为 CanvasLayer 的节点，无法添加蒙版。")
@@ -61,22 +49,39 @@ func _show_overlay() -> void:
 
 	# 3. 让它铺满父容器（CanvasLayer）整个视窗
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-	# 注意：因为它直接添加到 CanvasLayer 下，Control.PRESET_FULL_RECT 会让它的大小自动匹配整个 Viewport。
 
 	# 4. 把蒙版添加到这个已存在的 CanvasLayer 下
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui_layer.add_child(overlay)
 	freeze_node_tree(get_node("/root/Node3D/TableGrid"))
-	
+
+	# 5. 获取 responsive canvas 的缩放信息
+	var responsive: ResponsiveCanvas = ui_layer as ResponsiveCanvas
+	var scale_factor: float = 1.0
+	if responsive:
+		scale_factor = responsive.get_ui_scale()
+
 	var final_score = Label.new()
-	final_score.text = "得分：" + str(int(get_node("/root/Node3D/CanvasLayer/Label").text) + int(duration - _elapsed))
+	var score_text = get_node("/root/Node3D/CanvasLayer/ScoreValue").text
+	final_score.text = "得分：" + str(int(score_text) + int(duration - _elapsed))
 	final_score.z_index = 1024
-	final_score.scale = Vector2(4,4)
 	final_score.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	final_score.add_theme_font_size_override("font_size", 55)
-	final_score.set_position(get_viewport().size * 0.5 - Vector2(400,200))
-	add_child(final_score)
-	
+	final_score.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+
+	# Use anchors to center on screen (viewport-independent)
+	final_score.anchor_left = 0.5
+	final_score.anchor_top = 0.5
+	final_score.anchor_right = 0.5
+	final_score.anchor_bottom = 0.5
+	final_score.offset_left = -300 * scale_factor
+	final_score.offset_top = -100 * scale_factor
+	final_score.offset_right = 300 * scale_factor
+	final_score.offset_bottom = 100 * scale_factor
+
+	var font_size = maxi(int(55 * scale_factor), 18)
+	final_score.add_theme_font_size_override("font_size", font_size)
+	ui_layer.add_child(final_score)
+
 func freeze_node_tree(node: Node) -> void:
 	# 停止自身处理函数
 	if node.has_method("set_process"):

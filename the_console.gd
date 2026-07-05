@@ -1,9 +1,21 @@
-extends Node
+extends Node3D
 class_name TableGrid
 var rng = RandomNumberGenerator.new()
 
 @export var size: Vector2i  # 使用 Vector2i 表示列数和行数
 @export var num_diamonds: int
+## UI clearance, expressed in *screen pixels* at this design reference
+## resolution (matching responsive_canvas.gd's DESIGN_W/DESIGN_H), then
+## scaled by the same min(win_w/DESIGN_W, win_h/DESIGN_H) factor the 2D UI
+## itself uses — so the reserved area always matches the actual UI size
+## regardless of window size, instead of being a fixed amount of 3D world
+## space (which drifted out of sync with the UI whenever the board also
+## had to shrink for width).
+const DESIGN_W: float = 1920.0
+const DESIGN_H: float = 1080.0
+const TOP_PAD_PX: float = 160.0
+const BOTTOM_PAD_PX: float = 0.0
+
 var table: Array = []
 var has_not_diamonds: Array = []
 var regret_lists = []
@@ -12,11 +24,12 @@ var last_click_base: Object
 var all_diamonds: Array
 var alarm: Object
 func _enter_tree() -> void:
+	if size.x <= 0:
+		return
 
 	alarm = get_node("/root/Node3D/TableGrid/AudioStreamPlayer")
-	var cam := get_node("/root/Node3D/Camera3D")
-	cam.size = float(size.x)/3  # 控制可视范围
-	cam.transform.origin = Vector3(size.x/4, 6, size.y/4+0.25)
+
+	_refit()
 	
 	
 	for x in size.x:
@@ -30,7 +43,48 @@ func _enter_tree() -> void:
 		if i[0] == 2:
 			try_put_diamonds_two(i[1])
 	print(table)
-	
+
+func _ready() -> void:
+	get_tree().root.size_changed.connect(_refit)
+	# The window/viewport isn't always settled on the very first frame
+	# (mobile in particular may report a stale size before the real screen
+	# dimensions apply). Re-fit once that happens so the board doesn't stay
+	# mis-scaled or clipped from startup.
+	await get_tree().process_frame
+	_refit()
+
+func _refit() -> void:
+	var cam := get_node("/root/Node3D/Camera3D")
+	var board_w: float = (size.x - 1) * 0.5
+	var board_h: float = (size.y - 1) * 0.5
+
+	# Use the actual OS window size (not the viewport's canvas-transformed
+	# rect) so this always matches real screen pixels, regardless of the
+	# project's 2D stretch/canvas settings.
+	var win_size := get_window().size
+	var win_w: float = float(win_size.x)
+	var win_h: float = float(win_size.y)
+
+	var ui_scale: float = minf(win_w / DESIGN_W, win_h / DESIGN_H)
+	var top_pad_px: float = TOP_PAD_PX * ui_scale
+	var bottom_pad_px: float = BOTTOM_PAD_PX * ui_scale
+
+	# Fit the (never-distorted) board into whatever pixel box remains after
+	# reserving the UI strip — whichever axis is tighter sets the pixel
+	# density, so the board touches the screen edges on that axis; the
+	# other axis is left with any unavoidable leftover space.
+	var avail_w_px: float = win_w
+	var avail_h_px: float = maxf(win_h - top_pad_px - bottom_pad_px, 1.0)
+	var px_per_unit: float = minf(avail_w_px / board_w, avail_h_px / board_h)-4
+
+	# Camera3D.size (orthogonal, KEEP_HEIGHT) is the FULL world-height that
+	# maps to the full window height — derive it from the chosen density so
+	# 1 world unit always maps to px_per_unit screen pixels. The board
+	# itself is never scaled; only the camera zoom changes.
+	cam.size = win_h / px_per_unit
+	var top_pad_world: float = top_pad_px / px_per_unit
+	cam.transform.origin = Vector3(board_w * 0.5, 6.0, cam.size * 0.5 - top_pad_world)
+
 func _process(delta: float) -> void:
 	all_diamonds = count_all_diamonds()
 
@@ -58,7 +112,7 @@ func recover_mark_grey_click_point():
 func on_regret_button_pressed() -> void:
 	if regret_lists.size() == 0:
 		return
-	var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
+	var score_recorder = get_node("/root/Node3D/CanvasLayer/ScoreValue")
 	for i in regret_lists.back():
 		put_diamond(i[0].x, i[0].y, i[1])
 		score_recorder.text = str(int(score_recorder.text) - 1)
@@ -121,9 +175,16 @@ func try_put_diamonds_two(type: int) -> void:
 		
 func update_odds_notice():
 	check_odd_diamonds()
+	var cam = get_node("/root/Node3D/Camera3D")
+	# Dynamically compute hint bar position based on camera frustum
+	var cam_origin = cam.global_position
+	var cam_size = cam.size
+	# Place hints in a row above the visible area (in world space)
+	var start_x = cam_origin.x - cam_size * 0.7
+	var y_pos = cam_origin.z - cam_size * 0.9
+	var spacing = cam_size * 0.16
 	for i in range(1, 10):
 		var node_name := str(i)
-		# 先用 has() 或 get(key, default) 避免不存在时报错
 		if not has_node(node_name):
 			if odd_diamonds.get(i):
 				var hint := Sprite3D.new()
@@ -133,7 +194,7 @@ func update_odds_notice():
 				hint.texture = texture
 				hint.rotation_degrees = Vector3(-90, 0, 0)
 				add_child(hint)
-				hint.global_position = Vector3(4 + i*0.5,2,-0.5)
+				hint.global_position = Vector3(start_x + i * spacing, 2, y_pos)
 		elif has_node(node_name):
 			if not odd_diamonds.get(i):
 				get_node(node_name).queue_free()

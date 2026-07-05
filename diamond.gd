@@ -37,7 +37,7 @@ func to_vanish(target_position: Vector3, duration: float) -> void:
 	table_node.table[pos.x][pos.y].erase(self)
 	var tween := create_tween()
 	tween.tween_property(self, "global_position", target_position, duration)
-	var score_recorder = get_node("/root/Node3D/CanvasLayer/Label")
+	var score_recorder = get_node("/root/Node3D/CanvasLayer/ScoreValue")
 	score_recorder.text = str(int(score_recorder.text) + 1)
 	tween.tween_callback(Callable(self, "queue_free"))
 	
