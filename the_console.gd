@@ -75,7 +75,7 @@ func _refit() -> void:
 	# other axis is left with any unavoidable leftover space.
 	var avail_w_px: float = win_w
 	var avail_h_px: float = maxf(win_h - top_pad_px - bottom_pad_px, 1.0)
-	var px_per_unit: float = minf(avail_w_px / board_w, avail_h_px / board_h)-4
+	var px_per_unit: float = minf(avail_w_px / board_w, avail_h_px / board_h)-18
 
 	# Camera3D.size (orthogonal, KEEP_HEIGHT) is the FULL world-height that
 	# maps to the full window height — derive it from the chosen density so
@@ -183,13 +183,16 @@ func try_put_diamonds_two(type: int) -> void:
 func update_odds_notice():
 	check_odd_diamonds()
 	var cam = get_node("/root/Node3D/Camera3D")
-	# Dynamically compute hint bar position based on camera frustum
-	var cam_origin = cam.global_position
-	var cam_size = cam.size
-	# Place hints in a row above the visible area (in world space)
-	var start_x = cam_origin.x - cam_size * 0.7
-	var y_pos = cam_origin.z - cam_size * 0.9
-	var spacing = cam_size * 0.16
+	var board_w: float = (size.x - 1) * 0.5
+	# Place hints in the pad strip above the board (world z < 0), derived
+	# from the camera's *actual current* frustum top edge rather than a
+	# fixed fraction of cam.size — cam.size's meaning/value now depends on
+	# window aspect (see _refit()), so a fixed fraction of it no longer
+	# reliably lands inside the visible area.
+	var frustum_top: float = cam.transform.origin.z - cam.size * 0.5
+	var y_pos: float = frustum_top * 0.3
+	var start_x: float = board_w * 0.05
+	var spacing: float = board_w * 0.09
 	for i in range(1, 10):
 		var node_name := str(i)
 		if not has_node(node_name):

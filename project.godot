@@ -19,14 +19,14 @@ run/main_scene="uid://kv18n6u4ouw7"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
-[dotnet]
-
-project/assembly_name="Project_BD"
-
 [display]
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[dotnet]
+
+project/assembly_name="Project_BD"
 
 [rendering]
 
