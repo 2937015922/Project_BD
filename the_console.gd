@@ -182,32 +182,29 @@ func try_put_diamonds_two(type: int) -> void:
 		
 func update_odds_notice():
 	check_odd_diamonds()
-	var cam = get_node("/root/Node3D/Camera3D")
-	var board_w: float = (size.x - 1) * 0.5
-	# Place hints in the pad strip above the board (world z < 0), derived
-	# from the camera's *actual current* frustum top edge rather than a
-	# fixed fraction of cam.size — cam.size's meaning/value now depends on
-	# window aspect (see _refit()), so a fixed fraction of it no longer
-	# reliably lands inside the visible area.
-	var frustum_top: float = cam.transform.origin.z - cam.size * 0.5
-	var y_pos: float = frustum_top * 0.3
-	var start_x: float = board_w * 0.05
-	var spacing: float = board_w * 0.09
+	# 2D alert icons, one per odd-count diamond type, live in OddAlertBar —
+	# the half of the top row freed up by shortening CountdownProgressBar
+	# (see responsive_canvas.gd). Same on/off logic as before, just adding
+	# TextureRect children to a UI container instead of Sprite3D nodes in
+	# 3D space.
+	var container := get_node("/root/Node3D/CanvasLayer/OddAlertBar")
+	var ui_scale: float = get_node("/root/Node3D/CanvasLayer").get_ui_scale()
+	var icon_px: float = 40.0 * ui_scale
+
 	for i in range(1, 10):
 		var node_name := str(i)
-		if not has_node(node_name):
+		if not container.has_node(node_name):
 			if odd_diamonds.get(i):
-				var hint := Sprite3D.new()
+				var tex_rect := TextureRect.new()
 				var texture_path := "res://diamonds/%d.png" % i
-				var texture = load(texture_path)
-				hint.name = node_name
-				hint.texture = texture
-				hint.rotation_degrees = Vector3(-90, 0, 0)
-				add_child(hint)
-				hint.global_position = Vector3(start_x + i * spacing, 2, y_pos)
-		elif has_node(node_name):
+				tex_rect.name = node_name
+				tex_rect.texture = load(texture_path)
+				tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				tex_rect.custom_minimum_size = Vector2(icon_px, icon_px)
+				container.add_child(tex_rect)
+		elif container.has_node(node_name):
 			if not odd_diamonds.get(i):
-				get_node(node_name).queue_free()
+				container.get_node(node_name).queue_free()
 			
 func check_odd_diamonds():
 	all_diamonds = count_all_diamonds()

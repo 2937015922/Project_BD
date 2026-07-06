@@ -38,8 +38,17 @@ func _apply_layout(ctrl: Control, fs: int) -> void:
 			ctrl.add_theme_font_size_override("font_size", fs)
 
 		"CountdownProgressBar":
-			_pin(ctrl, 0.0, 0.0, 1.0, 0.0)
-			_set_offsets(ctrl, 200, 10, -360, 60)
+			# Halved (was anchor_right=1.0, offset_right=-360) so the freed
+			# right half of the row is available for OddAlertBar below.
+			_pin(ctrl, 0.0, 0.0, 0.5, 0.0)
+			_set_offsets(ctrl, 200, 10, -20, 60)
+
+		"OddAlertBar":
+			# The 2D odd-diamond-count alert icons live here now (see
+			# the_console.gd's update_odds_notice()), in the half of the row
+			# freed up by shortening CountdownProgressBar above.
+			_pin(ctrl, 0.5, 0.0, 1.0, 0.0)
+			_set_offsets(ctrl, 20, 10, -345, 60)
 
 		"UndoButton":
 			_pin(ctrl, 1.0, 0.0, 1.0, 0.0)
